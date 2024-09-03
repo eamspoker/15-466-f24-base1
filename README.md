@@ -12,6 +12,8 @@ How Your Asset Pipeline Works:
 
 (TODO: describe the steps in your asset pipeline, from source files to tiles/backgrounds/whatever you upload to the PPU466.)
 
+- source files: _tile.png with red, green, blue, black representing palette color 1-4 respective, _palette.png representing palette
+
 (TODO: make sure the source files you drew are included. You can [link](your/file.png) to them to be a bit fancier.)
 
 How To Play:

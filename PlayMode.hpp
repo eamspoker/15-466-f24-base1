@@ -32,4 +32,8 @@ struct PlayMode : Mode {
 	//----- drawing handled by PPU466 -----
 
 	PPU466 ppu;
+
+	// time since last checkpoint
+	float ckpt_time = 0.0f;
+
 };
