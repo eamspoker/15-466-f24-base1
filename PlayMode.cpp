@@ -14,6 +14,7 @@
 #include "data_path.hpp"
 
 #include <map>
+#include <chrono>
 
 // a set of tiles that share a palette
 struct TileMapInfo {
