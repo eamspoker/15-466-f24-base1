@@ -256,12 +256,20 @@ void write_asset(std::string filename, std::string palette_filename, glm::uvec2 
 			index++;
 		}
 
+		
+
 		// no palette match, throw error
 		if (index > 3)
 		{
 			throw std::runtime_error("Failed to create tile file '" + 
-				filename + "'. Pixel with no palette match found.");
+				filename + "'. Pixel with no palette match found. Color: "
+				+ std::to_string(pixel.r) + ", "
+				+ std::to_string(pixel.g) + ", "
+				+ std::to_string(pixel.b) + ", "
+				+ std::to_string(pixel.a));
 		}
+
+		
 	}
 
 	// ofstream code adapted from save png above
@@ -278,7 +286,6 @@ void write_asset(std::string filename, std::string palette_filename, glm::uvec2 
 
 	// size of the image in tiles
 	size_t tiles_width = (size->x)/8;
-	// size_t tiles_height = (size->y)/8;
 
 	size_t tile_index = 0;
 	for (size_t t_row = 0; t_row < (size->y); t_row += 8)
@@ -291,6 +298,7 @@ void write_asset(std::string filename, std::string palette_filename, glm::uvec2 
 			{
 				for (size_t col = t_col; col < t_col+8; col++)
 				{
+
 					tile.emplace_back(tile_map[col + row*tiles_width*8]);
 
 				}
@@ -301,7 +309,6 @@ void write_asset(std::string filename, std::string palette_filename, glm::uvec2 
 			tile_id =  (tile_index < 10) ? "0" + tile_id : tile_id;
 
 			tile_index++;
-
 			
 			// read tile into bit vectors
 			write_chunk<uint8_t>("t"+tile_id, tile, &tilefile); 
@@ -309,12 +316,10 @@ void write_asset(std::string filename, std::string palette_filename, glm::uvec2 
 		}
 
 	}
-
 	
-	
-
 	// write palette, tile chunks
 	write_chunk<glm::u8vec4>("plet", palette_data, &tilefile);
+	
 }
 
 void read_tilemap(std::string filename, std::vector<PPU466::Tile> *tiles, std::vector<glm::u8vec4> *palette)
@@ -324,12 +329,21 @@ void read_tilemap(std::string filename, std::vector<PPU466::Tile> *tiles, std::v
 	if (!file) {
 		throw std::runtime_error("Failed to open tile asset file '" + filename + "'.");
 	}
-			
+
+
 
 	// first get the number of tiles in the file...
 	std::vector<size_t> num_tiles;
 	read_chunk<size_t>("numt", file, &num_tiles); 
-	assert(num_tiles.size() == 1);
+	if (num_tiles.size() != 1)
+	{
+		throw std::runtime_error("Failed to open tile asset file '" + filename + "', multiple num tiles.");
+	}
+
+
+
+
+
 
 	// .. then create a PPU466 object for each tile to add to tiles
 	for (size_t i = 0; i < num_tiles[0]; i++)
@@ -359,6 +373,8 @@ void read_tilemap(std::string filename, std::vector<PPU466::Tile> *tiles, std::v
 				curr_row_bit0 = curr_row_bit0 | ((pixel & 1) << col);
 				curr_row_bit1 = curr_row_bit1 | (((pixel >> 1) & 1) << col);
 
+				// check that the index can be correctly reconstructed
+				// formula from PPU466.hpp
 				uint8_t bit0_check = (curr_row_bit0 >> col) & 1;
 				uint8_t bit1_check = (curr_row_bit1 >> col) & 1;
 				uint8_t color_index = (bit1_check << 1) | bit0_check;

@@ -135,7 +135,7 @@ function init_maek() {
 	//Constants:
 
 	//cache file location:
-	maek.CACHE_FILE = 'maek-cache.json';
+	maek.CACHE_FILE = 'assetsmaek-cache.json';
 
 	//current OS: (with slightly nicer naming than os.platform()
 	maek.OS = (() => {
