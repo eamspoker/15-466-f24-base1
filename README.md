@@ -6,7 +6,7 @@ Design: This game is based on picking people up on a bus, but you can only come 
 
 Screen Shot:
 
-![Screen Shot](screenshot.png)
+![Screen Shot](screenshot1.png)
 
 How Your Asset Pipeline Works:
 For each set of tiles in the game, one must create two pngs. One of the PNGs is the actual tileset, whose size must be some multiple of an 8x8 pixel square. The other PNG is a 2x2 pixel palette. The tileset must only use colors that are included in the palette. 
